@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutThunk } from '../../redux/slices/authSlice';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 function AdminNavbar({ user }) {
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ function AdminNavbar({ user }) {
       <div className="container">
         <nav className="navbar navbar-expand-lg">
           <NavLink className="navbar-brand" to="/" onClick={handleNavLinkClick}>
-            <img src="/assets/images/logo.svg" alt="CompileCraft Logo" />
+            <img src="/assets/images/logo.png" alt="CompileCraft Logo" />
           </NavLink>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -45,7 +46,15 @@ function AdminNavbar({ user }) {
               {/* Admin-specific links */}
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/users" onClick={handleNavLinkClick}>Manage Users</NavLink></li>
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/settings" onClick={handleNavLinkClick}>Admin Settings</NavLink></li>
-              <li className="nav-item"><button className="nav-link page-scroll btn btn-link" style={{padding:0, color:'#F94F4F'}} onClick={handleLogout}>Logout</button></li>
+              <li className="nav-item">
+                <button
+                  className="btn btn-outline-danger ms-2 d-flex align-items-center"
+                  style={{ fontWeight: 600, borderRadius: '2rem', padding: '6px 18px', fontSize: '1rem' }}
+                  onClick={handleLogout}
+                >
+                  <FaSignOutAlt className="me-2" /> Logout
+                </button>
+              </li>
             </ul>
           </div>
         </nav>

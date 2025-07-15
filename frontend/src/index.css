@@ -618,3 +618,14 @@ html, body, #root {
 .main-content-scroll {
   flex: 1 0 auto;
 }
+
+/* Ensure outlined danger buttons look identical for <a> and <button> */
+.btn-outline-danger, .btn-outline-danger:visited {
+  background-color: transparent !important;
+  color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+.btn-outline-danger:hover, .btn-outline-danger:focus {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
