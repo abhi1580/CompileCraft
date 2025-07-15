@@ -629,3 +629,8 @@ html, body, #root {
   background-color: #dc3545 !important;
   color: #fff !important;
 }
+
+/* Remove underline from main-btn links */
+.main-btn, .main-btn:visited, .main-btn:active, .main-btn:hover {
+  text-decoration: none !important;
+}
