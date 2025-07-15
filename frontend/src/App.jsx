@@ -23,6 +23,7 @@ import PublicNavbar from './components/PublicNavbar';
 import AdminLayout from './components/admin/AdminLayout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Careers from './pages/common/Careers';
 
 function App() {
   // Collapse navbar on link click (for mobile)
@@ -81,6 +82,7 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/careers" element={<Careers />} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
           <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />

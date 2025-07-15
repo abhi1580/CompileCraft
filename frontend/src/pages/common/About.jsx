@@ -3,12 +3,24 @@ import { FaUserTie, FaUserAlt, FaUserSecret, FaRegCalendarCheck, FaRegLightbulb 
 
 function About() {
   return (
-    <section id="about" className="about_area py-5" style={{ background: '#f8f9fb' }}>
-      <div className="container-fluid">
-        {/* Company Story & Mission */}
+    <section className="public-section py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
+      {/* Hero Section */}
+      <div className="container mb-5">
+        <div className="row justify-content-center">
+          <div className="col-lg-10">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center mb-5">
+              <h1 className="mb-3" style={{ fontWeight: 800, fontSize: '2.7rem' }}>About CompileCraft</h1>
+              <p className="lead mb-0" style={{ color: '#747E88', fontSize: '1.2rem' }}>
+                Empowering businesses with innovative, reliable, and scalable technology solutions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container">
         <div className="row justify-content-center mb-5">
-          <div className="col-lg-8">
-            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center">
+          <div className="col-lg-10">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center mb-5">
               <h2 className="mb-3" style={{ fontWeight: 800 }}>Our Story</h2>
               <p style={{ fontSize: '1.1rem' }}>
                 CompileCraft was founded by passionate technologists who believe in the power of software to transform businesses. Our mission is to empower organizations with innovative, reliable, and scalable technology solutions that drive real results.
@@ -18,10 +30,9 @@ function About() {
             </div>
           </div>
         </div>
-        {/* Timeline / Milestones */}
         <div className="row justify-content-center mb-5">
           <div className="col-lg-10">
-            <div className="bg-light rounded-4 p-4 p-md-5">
+            <div className="bg-light rounded-4 p-4 p-md-5 mb-5">
               <h3 className="text-center mb-4" style={{ fontWeight: 800 }}>Milestones</h3>
               <div className="row g-4">
                 <div className="col-md-4 text-center">
@@ -43,10 +54,9 @@ function About() {
             </div>
           </div>
         </div>
-        {/* Team Section */}
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 mb-5">
               <h3 className="text-center mb-4" style={{ fontWeight: 800 }}>Meet the Team</h3>
               <div className="row g-4 justify-content-center">
                 {[{

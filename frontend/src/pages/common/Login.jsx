@@ -52,9 +52,6 @@ function Login() {
                   <button type="submit" className="main-btn" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
                 </div>
               </form>
-              <div className="text-center mt-3" style={{ color: '#adb5bd', fontSize: '0.95rem' }}>
-                <span>Demo only. Dashboard access coming soon.</span>
-              </div>
             </div>
           </div>
         </div>

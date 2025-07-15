@@ -19,6 +19,7 @@ function PublicNavbar({ user, onLogout, handleNavLinkClick }) {
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/about" onClick={handleNavLinkClick}>About</NavLink></li>
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/services" onClick={handleNavLinkClick}>Services</NavLink></li>
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/contact" onClick={handleNavLinkClick}>Contact</NavLink></li>
+              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/careers" onClick={handleNavLinkClick}>Careers</NavLink></li>
               {!user && (
                 <li className="nav-item">
                   <NavLink

@@ -3,37 +3,50 @@ import { FaEnvelopeOpenText, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaLinkedin,
 
 function Contact() {
   return (
-    <section id="contact" className="contact_area py-5" style={{ background: '#f8f9fb' }}>
-      <div className="container-fluid">
+    <section className="public-section py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
+      {/* Hero Section */}
+      <div className="container mb-5">
+        <div className="row justify-content-center">
+          <div className="col-lg-10">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center mb-5">
+              <h1 className="mb-3" style={{ fontWeight: 800, fontSize: '2.7rem' }}>Contact Us</h1>
+              <p className="lead mb-0" style={{ color: '#747E88', fontSize: '1.2rem' }}>
+                Ready to start your next project or have questions? Reach out and our team will get back to you within 24 hours.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="container">
         <div className="row justify-content-center mb-5">
           <div className="col-lg-8">
-            <div className="text-center mb-4">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center mb-5">
               <FaEnvelopeOpenText size={40} color="#F94F4F" className="mb-2" />
               <span className="sub_title d-block mb-2" style={{ color: '#F94F4F', fontWeight: 600 }}>Contact Us</span>
-              <h2 className="main_title">Let’s Work Together</h2>
+              <h2 className="main_title mb-3" style={{ fontWeight: 800 }}>Let’s Work Together</h2>
               <p className="mt-3 mb-0">Ready to start your next project or have questions? Fill out the form below and our team will get back to you within 24 hours.</p>
+              <form className="mt-4">
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <input type="text" className="form-control" placeholder="Your Name" required />
+                  </div>
+                  <div className="col-md-6">
+                    <input type="email" className="form-control" placeholder="Your Email" required />
+                  </div>
+                  <div className="col-12">
+                    <textarea className="form-control" rows="4" placeholder="Your Message" required></textarea>
+                  </div>
+                </div>
+                <div className="text-center mt-4">
+                  <button type="submit" className="main-btn">Send Message</button>
+                </div>
+              </form>
             </div>
-            <form>
-              <div className="row g-3">
-                <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Your Name" required />
-                </div>
-                <div className="col-md-6">
-                  <input type="email" className="form-control" placeholder="Your Email" required />
-                </div>
-                <div className="col-12">
-                  <textarea className="form-control" rows="4" placeholder="Your Message" required></textarea>
-                </div>
-              </div>
-              <div className="text-center mt-4">
-                <button type="submit" className="main-btn">Send Message</button>
-              </div>
-            </form>
           </div>
         </div>
         <div className="row justify-content-center mb-5">
           <div className="col-lg-8">
-            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center">
+            <div className="bg-light rounded-4 p-4 p-md-5 text-center mb-5">
               <h4 className="mb-3" style={{ fontWeight: 700 }}>Contact Information</h4>
               <div className="row g-4">
                 <div className="col-md-4">
@@ -59,7 +72,7 @@ function Contact() {
         </div>
         <div className="row justify-content-center">
           <div className="col-lg-8">
-            <div className="bg-light rounded-4 p-4 p-md-5 text-center">
+            <div className="bg-white rounded-4 shadow-sm p-4 p-md-5 text-center mb-5">
               <h4 className="mb-3" style={{ fontWeight: 700 }}>Our Location</h4>
               <div style={{ width: '100%', height: '220px', background: '#e9ecef', borderRadius: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#747E88' }}>
                 <span>Map Placeholder</span>
