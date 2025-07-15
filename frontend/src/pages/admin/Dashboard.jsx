@@ -44,7 +44,7 @@ function Dashboard() {
         {/* Navigation Cards */}
         <div className="row g-4 justify-content-center">
           <div className="col-6 col-md-2">
-            <Link to="/projects" className="text-decoration-none">
+            <Link to="/admin/projects" className="text-decoration-none">
               <div className="bg-white rounded-4 shadow-sm p-4 text-center h-100 dashboard-nav-card">
                 <FaProjectDiagram size={28} color="#38424D" className="mb-2" />
                 <div className="fw-bold">Projects</div>
@@ -52,7 +52,7 @@ function Dashboard() {
             </Link>
           </div>
           <div className="col-6 col-md-2">
-            <Link to="/revenue" className="text-decoration-none">
+            <Link to="/admin/revenue" className="text-decoration-none">
               <div className="bg-white rounded-4 shadow-sm p-4 text-center h-100 dashboard-nav-card">
                 <FaMoneyBillWave size={28} color="#38424D" className="mb-2" />
                 <div className="fw-bold">Revenue</div>

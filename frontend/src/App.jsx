@@ -20,6 +20,9 @@ import ProjectCreate from './pages/admin/ProjectCreate';
 import ProjectEdit from './pages/admin/ProjectEdit';
 import ProjectDetails from './pages/admin/ProjectDetails';
 import PublicNavbar from './components/PublicNavbar';
+import AdminLayout from './components/admin/AdminLayout';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   // Collapse navbar on link click (for mobile)
@@ -65,23 +68,26 @@ function App() {
   return (
     <div className="app-flex-root">
       {/* Navbar (shared across all pages) */}
-      {user && user.role === 'admin' ? <AdminNavbar user={user} /> : <PublicNavbar user={user} onLogout={handleLogout} handleNavLinkClick={handleNavLinkClick} />}
+      <PublicNavbar user={user} onLogout={handleLogout} handleNavLinkClick={handleNavLinkClick} />
       {/* Page Content */}
       <div className="main-content-scroll" style={{ minHeight: 'calc(100vh - 140px)', overflowY: 'auto' }}>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/projects" element={<ProjectList />} />
-          <Route path="/projects/create" element={<ProjectCreate />} />
-          <Route path="/projects/:id/edit" element={<ProjectEdit />} />
-          <Route path="/projects/:id" element={<ProjectDetails />} />
-          <Route path="/revenue" element={<Revenue />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
+          {/* Admin routes */}
+          <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
+          <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
+          <Route path="/admin/projects" element={<AdminLayout><ProjectList /></AdminLayout>} />
+          <Route path="/admin/projects/create" element={<AdminLayout><ProjectCreate /></AdminLayout>} />
+          <Route path="/admin/projects/:id/edit" element={<AdminLayout><ProjectEdit /></AdminLayout>} />
+          <Route path="/admin/projects/:id" element={<AdminLayout><ProjectDetails /></AdminLayout>} />
+          <Route path="/admin/revenue" element={<AdminLayout><Revenue /></AdminLayout>} />
+          <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
+          <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
         </Routes>
       </div>
       {/* Footer (shared across all pages) */}
@@ -90,6 +96,7 @@ function App() {
           <p className="mb-0">&copy; {new Date().getFullYear()} CompileCraft. All rights reserved.</p>
         </div>
       </footer>
+      <ToastContainer />
     </div>
   );
 }

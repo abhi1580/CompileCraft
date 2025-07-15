@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 function Login() {
   const dispatch = useDispatch();
@@ -13,9 +14,16 @@ function Login() {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      toast.success('Login successful!');
+      navigate('/admin/dashboard');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,7 +48,6 @@ function Login() {
                   <label htmlFor="loginPassword" className="form-label">Password</label>
                   <input type="password" className="form-control" id="loginPassword" placeholder="Enter your password" required value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
-                {error && <div className="alert alert-danger py-2">{error}</div>}
                 <div className="d-grid mb-3">
                   <button type="submit" className="main-btn" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
                 </div>

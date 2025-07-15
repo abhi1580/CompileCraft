@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as projectService from '../../services/projectService';
 import ProgressBar from './ProgressBar';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaEye, FaPencilAlt, FaTrash as FaTrashIcon } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export default function ProjectList() {
   const [projects, setProjects] = useState([]);
@@ -18,8 +20,7 @@ export default function ProjectList() {
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 10;
 
-  // Priority sort order
-  const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+  // Remove priorityOrder and priority sort logic
 
   useEffect(() => {
     projectService.getProjects()
@@ -33,8 +34,9 @@ export default function ProjectList() {
     try {
       await projectService.deleteProject(id);
       setProjects(prev => prev.filter(p => p._id !== id));
+      toast.success('Project deleted successfully!');
     } catch (err) {
-      alert(err.response?.data?.error || 'Failed to delete project');
+      toast.error(err.response?.data?.error || 'Failed to delete project');
     }
   };
 
@@ -44,8 +46,6 @@ export default function ProjectList() {
       let aVal = a[sortField], bVal = b[sortField];
       if (sortField === 'deadline') {
         aVal = new Date(aVal); bVal = new Date(bVal);
-      } else if (sortField === 'priority') {
-        aVal = priorityOrder[aVal] || 0; bVal = priorityOrder[bVal] || 0;
       }
       if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
       if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
@@ -56,13 +56,20 @@ export default function ProjectList() {
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
   const paginatedProjects = filteredProjects.slice((currentPage - 1) * projectsPerPage, currentPage * projectsPerPage);
 
+  // Helper for initials
+  function getInitials(nameOrEmail) {
+    if (!nameOrEmail) return '';
+    const parts = nameOrEmail.split('@')[0].split(/[. _-]/);
+    return parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : nameOrEmail.slice(0, 2).toUpperCase();
+  }
+
   return (
     <section className="projects_area py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
       <div className="container-fluid">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 style={{ fontWeight: 800 }}>Projects</h2>
           {user && user.role === 'admin' && (
-            <button className="main-btn" onClick={() => navigate('/projects/create')}>Add Project</button>
+            <button className="main-btn" onClick={() => navigate('/admin/projects/create')}>Add Project</button>
           )}
         </div>
         <div className="row mb-3">
@@ -78,7 +85,6 @@ export default function ProjectList() {
             <select className="form-select" value={sortField} onChange={e => setSortField(e.target.value)}>
               <option value="deadline">Sort by Deadline</option>
               <option value="progress">Sort by Progress</option>
-              <option value="priority">Sort by Priority</option>
             </select>
           </div>
           <div className="col-md-3">
@@ -92,68 +98,81 @@ export default function ProjectList() {
         {error && <div className="alert alert-danger">{error}</div>}
         {!loading && !error && (
           filteredProjects.length === 0 ? (
-            <div className="alert alert-info">No projects found.</div>
+            <div className="alert alert-info d-flex flex-column align-items-center py-5">
+              <span style={{ fontSize: 48, color: '#F94F4F' }}>📁</span>
+              <div className="mt-3">No projects found. Start by adding a new project!</div>
+            </div>
           ) : (
             <>
-              <div className="table-responsive">
-                <table className="table table-bordered bg-white rounded-4 shadow-sm">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Name</th>
-                      <th>Status</th>
-                      <th>Deadline</th>
-                      <th>Priority</th>
-                      <th>Budget</th>
-                      <th>Progress</th>
-                      <th>Team</th>
-                      <th>Tasks</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedProjects.map((proj) => (
-                      <tr key={proj._id}>
-                        <td>{proj.name}<br /><small className="text-muted">{proj.description}</small></td>
-                        <td>{proj.status}</td>
-                        <td>{proj.deadline ? new Date(proj.deadline).toLocaleDateString() : ''}</td>
-                        <td>{proj.priority}</td>
-                        <td>{proj.budget ? `₹${proj.budget.toLocaleString()}` : '-'}</td>
-                        <td style={{ minWidth: 120 }}><ProgressBar value={Number(proj.progress) || 0} /></td>
-                        <td>
+              <div className="row g-4">
+                {paginatedProjects.map((proj) => {
+                  const completedTasks = proj.tasks ? proj.tasks.filter(t => t.completed).length : 0;
+                  const totalTasks = proj.tasks ? proj.tasks.length : 0;
+                  return (
+                    <div key={proj._id} className="col-12 col-md-6 col-lg-4 col-xl-3">
+                      <div className="project-card shadow-sm rounded-4 p-4 h-100 d-flex flex-column position-relative bg-white">
+                        {/* Status badge */}
+                        <span className={`badge position-absolute top-0 end-0 m-3 ${proj.status === 'Completed' ? 'bg-success' : proj.status === 'In Progress' ? 'bg-warning text-dark' : 'bg-secondary'}`}>{proj.status}</span>
+                        {/* Project name/desc */}
+                        <h5 className="fw-bold mb-1" style={{ fontSize: '1.25rem' }}>{proj.name}</h5>
+                        <div className="text-muted mb-2" style={{ minHeight: 32 }}>{proj.description}</div>
+                        {/* Progress bar */}
+                        <div className="mb-2">
+                          <ProgressBar value={Number(proj.progress) || 0} />
+                          <div className="text-end text-muted" style={{ fontSize: '0.95em' }}>{proj.progress || 0}%</div>
+                        </div>
+                        {/* Team avatars */}
+                        <div className="mb-2 d-flex flex-wrap align-items-center gap-1">
                           {proj.team && proj.team.map((member) => (
-                            <span key={member._id || member.email} className="me-2">
-                              {member.role === 'admin' && <FaUserTie title={member.email} />}
-                              {member.role !== 'admin' && <FaUserAlt title={member.email} />}
-                              <span className="ms-1">{member.email}</span>
+                            <span key={member._id || member.email} className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary text-white me-1" style={{ width: 32, height: 32, fontSize: 14, fontWeight: 700 }} title={member.email}>
+                              {getInitials(member.email)}
                             </span>
                           ))}
-                        </td>
-                        <td>
-                          {proj.tasks && proj.tasks.length > 0 ? (
-                            <div style={{ maxHeight: 80, overflowY: 'auto' }}>
-                              <ul className="mb-0 ps-3">
-                                {proj.tasks.map((task) => (
-                                  <li key={task._id || task.title} style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
-                                    {task.title}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                        </div>
+                        {/* Task summary */}
+                        <div className="mb-2">
+                          {totalTasks > 0 ? (
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip id={`tasks-tooltip-${proj._id}`}>{completedTasks} of {totalTasks} tasks completed</Tooltip>}
+                            >
+                              <span className="badge bg-primary" style={{ cursor: 'pointer' }}>{completedTasks}/{totalTasks} tasks</span>
+                            </OverlayTrigger>
                           ) : <span className="text-muted">No tasks</span>}
-                        </td>
-                        <td>
-                          <button className="btn btn-sm btn-outline-info me-1" aria-label="View project details" onClick={() => navigate(`/projects/${proj._id}`)}>Details</button>
+                        </div>
+                        {/* Deadline, budget, and task priority summary */}
+                        <div className="mb-3 d-flex flex-wrap gap-2">
+                          <span className="badge bg-light text-dark border">Deadline: {proj.deadline ? new Date(proj.deadline).toLocaleDateString() : 'N/A'}</span>
+                          <span className="badge bg-light text-dark border">Budget: {proj.budget ? `₹${proj.budget.toLocaleString()}` : 'N/A'}</span>
+                          {/* Task priority summary */}
+                          {proj.tasks && proj.tasks.length > 0 && (
+                            <span className="badge bg-info text-dark border">
+                              {`High: ${proj.tasks.filter(t => t.priority === 'High').length}, `}
+                              {`Medium: ${proj.tasks.filter(t => t.priority === 'Medium').length}, `}
+                              {`Low: ${proj.tasks.filter(t => t.priority === 'Low').length}`}
+                            </span>
+                          )}
+                        </div>
+                        {/* Actions */}
+                        <div className="mt-auto d-flex gap-2 justify-content-end">
+                          <OverlayTrigger placement="top" overlay={<Tooltip>Details</Tooltip>}>
+                            <button className="btn btn-sm btn-outline-info" aria-label="View project details" onClick={() => navigate(`/admin/projects/${proj._id}`)}><FaEye /></button>
+                          </OverlayTrigger>
                           {user && user.role === 'admin' && (
                             <>
-                              <button className="btn btn-sm btn-outline-primary me-1" aria-label="Edit project" onClick={() => navigate(`/projects/${proj._id}/edit`)}>Edit</button>
-                              <button className="btn btn-sm btn-outline-danger" aria-label="Delete project" onClick={() => handleDelete(proj._id)}><FaTrash /></button>
+                              <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
+                                <button className="btn btn-sm btn-outline-primary" aria-label="Edit project" onClick={() => navigate(`/admin/projects/${proj._id}/edit`)}><FaPencilAlt /></button>
+                              </OverlayTrigger>
+                              <OverlayTrigger placement="top" overlay={<Tooltip>Delete</Tooltip>}>
+                                <button className="btn btn-sm btn-outline-danger" aria-label="Delete project" onClick={() => handleDelete(proj._id)}><FaTrashIcon /></button>
+                              </OverlayTrigger>
                             </>
                           )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               {/* Pagination Controls */}
               {totalPages > 1 && (
@@ -167,6 +186,15 @@ export default function ProjectList() {
           )
         )}
       </div>
+      <style>{`
+        .project-card {
+          transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .project-card:hover {
+          box-shadow: 0 8px 32px rgba(56,66,77,0.10);
+          transform: translateY(-2px) scale(1.02);
+        }
+      `}</style>
     </section>
   );
 } 

@@ -27,12 +27,11 @@ export default function ProjectDetails() {
   return (
     <section className="projects_area py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
       <div className="container-fluid">
-        <button className="btn btn-link mb-3" onClick={() => navigate('/projects')}>&larr; Back to Projects</button>
+        <button className="btn btn-link mb-3" onClick={() => navigate('/admin/projects')}>&larr; Back to Projects</button>
         <div className="card shadow-sm rounded-4 p-4 mb-4 bg-white">
           <h2 className="fw-bold mb-2">{project.name}</h2>
           <div className="mb-3">
             <span className={`badge me-2 ${project.status === 'Completed' ? 'bg-success' : project.status === 'In Progress' ? 'bg-warning text-dark' : 'bg-secondary'}`}>{project.status}</span>
-            <span className={`badge me-2 ${project.priority === 'High' ? 'bg-danger' : project.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'}`}>{project.priority} Priority</span>
             <span className="badge bg-light text-dark me-2">Deadline: {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'N/A'}</span>
             <span className="badge bg-light text-dark">Budget: {project.budget ? `₹${project.budget.toLocaleString()}` : 'N/A'}</span>
           </div>
@@ -64,6 +63,7 @@ export default function ProjectDetails() {
                         <span className="ms-2 text-muted" style={{ fontSize: '0.95em' }}>
                           {assignee ? `(${assignee.email})` : '(Unassigned)'}
                         </span>
+                        <span className={`badge ms-2 ${task.priority === 'High' ? 'bg-danger' : task.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'}`}>{task.priority}</span>
                         {task.completed && <span className="badge bg-success ms-2">Done</span>}
                       </li>
                     );

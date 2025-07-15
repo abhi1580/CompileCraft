@@ -20,7 +20,7 @@ exports.addProject = async (req, res) => {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Only admins can add projects' });
   }
-  const { name, description, status, deadline, team, priority, budget, tasks } = req.body;
+  const { name, description, status, deadline, team, budget, tasks } = req.body;
   if (!name || !deadline) {
     return res.status(400).json({ error: 'Name and deadline are required' });
   }
@@ -34,7 +34,6 @@ exports.addProject = async (req, res) => {
     status,
     deadline,
     team: teamIds,
-    priority,
     budget,
     tasks: Array.isArray(tasks) ? tasks : [],
     createdBy: req.user && req.user._id ? req.user._id : undefined,
@@ -58,7 +57,7 @@ exports.updateProject = async (req, res) => {
     return res.status(403).json({ error: 'Only admins can edit projects' });
   }
   const { id } = req.params;
-  const { name, description, status, deadline, team, priority, budget, tasks } = req.body;
+  const { name, description, status, deadline, team, budget, tasks } = req.body;
   let teamIds = [];
   if (Array.isArray(team)) {
     teamIds = await User.find({ _id: { $in: team } }).distinct('_id');
@@ -69,7 +68,6 @@ exports.updateProject = async (req, res) => {
     status,
     deadline,
     team: teamIds,
-    priority,
     budget,
     tasks: Array.isArray(tasks) ? tasks : [],
   };

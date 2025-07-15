@@ -5,6 +5,7 @@ import * as projectService from '../../services/projectService';
 import * as userService from '../../services/userService';
 import { FaPlus, FaTrash, FaCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 export default function ProjectCreate() {
   const [form, setForm] = useState({
@@ -13,12 +14,9 @@ export default function ProjectCreate() {
     status: 'Planning',
     deadline: '',
     team: [],
-    priority: 'Medium',
     budget: '',
     tasks: [],
   });
-  const [formError, setFormError] = useState(null);
-  const [formSuccess, setFormSuccess] = useState(null);
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState(null);
@@ -51,7 +49,7 @@ export default function ProjectCreate() {
     }));
   };
   const handleAddTask = () => {
-    setForm(f => ({ ...f, tasks: [...f.tasks, { title: '', completed: false }] }));
+    setForm(f => ({ ...f, tasks: [...f.tasks, { title: '', completed: false, priority: 'Medium' }] }));
   };
   const handleRemoveTask = idx => {
     setForm(f => ({ ...f, tasks: f.tasks.filter((_, i) => i !== idx) }));
@@ -59,10 +57,8 @@ export default function ProjectCreate() {
 
   const handleAddProject = async e => {
     e.preventDefault();
-    setFormError(null);
-    setFormSuccess(null);
     if (!form.name || !form.deadline) {
-      setFormError('Name and deadline are required');
+      toast.error('Name and deadline are required');
       return;
     }
     try {
@@ -72,14 +68,13 @@ export default function ProjectCreate() {
         status: form.status,
         deadline: form.deadline,
         team: form.team,
-        priority: form.priority,
         budget: form.budget ? Number(form.budget) : undefined,
         tasks: form.tasks,
       });
-      setFormSuccess('Project added successfully!');
-      setTimeout(() => navigate('/projects'), 1000);
+      toast.success('Project added successfully!');
+      setTimeout(() => navigate('/admin/projects'), 1000);
     } catch (err) {
-      setFormError(err.response?.data?.error || 'Failed to add project');
+      toast.error(err.response?.data?.error || 'Failed to add project');
     }
   };
 
@@ -116,16 +111,8 @@ export default function ProjectCreate() {
               <input type="date" className="form-control" name="deadline" value={form.deadline} onChange={handleInputChange} required />
             </div>
           </div>
-          {/* Budget & Priority */}
+          {/* Budget (removed Priority) */}
           <div className="row g-3 mb-2">
-            <div className="col-md-3">
-              <label className="form-label fw-bold">Priority</label>
-              <select className="form-select" name="priority" value={form.priority} onChange={handleInputChange}>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
             <div className="col-md-3">
               <label className="form-label fw-bold">Budget</label>
               <div className="input-group">
@@ -175,6 +162,7 @@ export default function ProjectCreate() {
                       <tr>
                         <th>Task</th>
                         <th>Assignee</th>
+                        <th>Priority</th>
                         <th>Completed</th>
                         <th>Remove</th>
                       </tr>
@@ -191,6 +179,13 @@ export default function ProjectCreate() {
                               {users.filter(u => form.team.includes(u._id)).map(u => (
                                 <option key={u._id} value={u._id}>{u.email}</option>
                               ))}
+                            </select>
+                          </td>
+                          <td style={{ minWidth: 120 }}>
+                            <select className="form-select" value={task.priority || 'Medium'} onChange={e => handleTaskChange(idx, 'priority', e.target.value)}>
+                              <option value="Low">Low</option>
+                              <option value="Medium">Medium</option>
+                              <option value="High">High</option>
                             </select>
                           </td>
                           <td className="text-center">
@@ -210,11 +205,9 @@ export default function ProjectCreate() {
             </div>
           )}
           {/* Error/Success */}
-          {formError && <div className="alert alert-danger mt-3 mb-0 py-2">{formError}</div>}
-          {formSuccess && <div className="alert alert-success mt-3 mb-0 py-2">{formSuccess}</div>}
           {/* Actions */}
           <div className="d-flex justify-content-end gap-2 mt-4">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/projects')}>Cancel</button>
+            <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/admin/projects')}>Cancel</button>
             <button type="submit" className="main-btn">Add Project</button>
           </div>
         </form>

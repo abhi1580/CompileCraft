@@ -39,9 +39,9 @@ function AdminNavbar({ user }) {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/" onClick={handleNavLinkClick}>Home</NavLink></li>
-              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/dashboard" onClick={handleNavLinkClick}>Dashboard</NavLink></li>
-              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/projects" onClick={handleNavLinkClick}>Projects</NavLink></li>
-              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/revenue" onClick={handleNavLinkClick}>Revenue</NavLink></li>
+              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/dashboard" onClick={handleNavLinkClick}>Dashboard</NavLink></li>
+              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/projects" onClick={handleNavLinkClick}>Projects</NavLink></li>
+              <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/revenue" onClick={handleNavLinkClick}>Revenue</NavLink></li>
               {/* Admin-specific links */}
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/users" onClick={handleNavLinkClick}>Manage Users</NavLink></li>
               <li className="nav-item"><NavLink className={({ isActive }) => 'nav-link page-scroll' + (isActive ? ' active' : '')} to="/admin/settings" onClick={handleNavLinkClick}>Admin Settings</NavLink></li>

@@ -5,12 +5,11 @@ import * as projectService from '../../services/projectService';
 import * as userService from '../../services/userService';
 import { FaPlus, FaTrash, FaCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 export default function ProjectEdit() {
   const { id } = useParams();
   const [form, setForm] = useState(null);
-  const [formError, setFormError] = useState(null);
-  const [formSuccess, setFormSuccess] = useState(null);
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState(null);
@@ -28,13 +27,14 @@ export default function ProjectEdit() {
       if (project) {
         setForm({
           ...project,
+          deadline: project.deadline ? project.deadline.slice(0, 10) : '',
           team: project.team.map(u => u._id),
-          tasks: project.tasks.map(t => ({ ...t })),
+          tasks: project.tasks.map(t => ({ ...t, priority: t.priority || 'Medium' })),
         });
       }
       setUsers(users);
     }).catch(err => {
-      setFormError('Failed to load project or users');
+      toast.error('Failed to load project or users');
     }).finally(() => setLoading(false));
   }, [id]);
 
@@ -56,7 +56,7 @@ export default function ProjectEdit() {
     }));
   };
   const handleAddTask = () => {
-    setForm(f => ({ ...f, tasks: [...f.tasks, { title: '', completed: false }] }));
+    setForm(f => ({ ...f, tasks: [...f.tasks, { title: '', completed: false, priority: 'Medium' }] }));
   };
   const handleRemoveTask = idx => {
     setForm(f => ({ ...f, tasks: f.tasks.filter((_, i) => i !== idx) }));
@@ -64,14 +64,15 @@ export default function ProjectEdit() {
 
   const handleEditProject = async e => {
     e.preventDefault();
-    setFormError(null);
-    setFormSuccess(null);
     try {
-      await projectService.updateProject(id, form);
-      setFormSuccess('Project updated successfully!');
-      setTimeout(() => navigate('/projects'), 1000);
+      await projectService.updateProject(id, {
+        ...form,
+        priority: undefined,
+      });
+      toast.success('Project updated successfully!');
+      setTimeout(() => navigate('/admin/projects'), 1000);
     } catch (err) {
-      setFormError(err.response?.data?.error || 'Failed to update project');
+      toast.error(err.response?.data?.error || 'Failed to update project');
     }
   };
 
@@ -113,14 +114,6 @@ export default function ProjectEdit() {
           </div>
           {/* Budget & Priority */}
           <div className="row g-3 mb-2">
-            <div className="col-md-3">
-              <label className="form-label fw-bold">Priority</label>
-              <select className="form-select" name="priority" value={form.priority} onChange={handleInputChange}>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
             <div className="col-md-3">
               <label className="form-label fw-bold">Budget</label>
               <div className="input-group">
@@ -170,6 +163,7 @@ export default function ProjectEdit() {
                       <tr>
                         <th>Task</th>
                         <th>Assignee</th>
+                        <th>Priority</th>
                         <th>Completed</th>
                         <th>Remove</th>
                       </tr>
@@ -186,6 +180,13 @@ export default function ProjectEdit() {
                               {users.filter(u => form.team.includes(u._id)).map(u => (
                                 <option key={u._id} value={u._id}>{u.email}</option>
                               ))}
+                            </select>
+                          </td>
+                          <td style={{ minWidth: 120 }}>
+                            <select className="form-select" value={task.priority || 'Medium'} onChange={e => handleTaskChange(idx, 'priority', e.target.value)}>
+                              <option value="Low">Low</option>
+                              <option value="Medium">Medium</option>
+                              <option value="High">High</option>
                             </select>
                           </td>
                           <td className="text-center">
@@ -205,11 +206,9 @@ export default function ProjectEdit() {
             </div>
           )}
           {/* Error/Success */}
-          {formError && <div className="alert alert-danger mt-3 mb-0 py-2">{formError}</div>}
-          {formSuccess && <div className="alert alert-success mt-3 mb-0 py-2">{formSuccess}</div>}
           {/* Actions */}
           <div className="d-flex justify-content-end gap-2 mt-4">
-            <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/projects')}>Cancel</button>
+            <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/admin/projects')}>Cancel</button>
             <button type="submit" className="main-btn">Save Changes</button>
           </div>
         </form>
