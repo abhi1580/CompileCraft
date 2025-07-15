@@ -142,8 +142,8 @@ export default function ProjectList() {
                           {proj.team && proj.team.map((member) => (
                             <span key={member._id || member.email} className="d-inline-flex align-items-center justify-content-center rounded-circle bg-secondary text-white me-1" style={{ width: 32, height: 32, fontSize: 14, fontWeight: 700 }} title={member.email}>
                               {getInitials(member.email)}
-                            </span>
-                          ))}
+                        </span>
+                      ))}
                         </div>
                         {/* Task summary */}
                         <div className="mb-2">
@@ -154,7 +154,7 @@ export default function ProjectList() {
                             >
                               <span className="badge bg-primary" style={{ cursor: 'pointer' }}>{completedTasks}/{totalTasks} tasks</span>
                             </OverlayTrigger>
-                          ) : <span className="text-muted">No tasks</span>}
+                      ) : <span className="text-muted">No tasks</span>}
                         </div>
                         {/* Deadline, budget, and task priority summary */}
                         <div className="mb-3 d-flex flex-wrap gap-2">
@@ -174,16 +174,16 @@ export default function ProjectList() {
                           <OverlayTrigger placement="top" overlay={<Tooltip>Details</Tooltip>}>
                             <button className="btn btn-sm btn-outline-info" aria-label="View project details" onClick={() => navigate(`/admin/projects/${proj._id}`)}><FaEye /></button>
                           </OverlayTrigger>
-                          {user && user.role === 'admin' && (
-                            <>
+                      {user && user.role === 'admin' && (
+                        <>
                               <OverlayTrigger placement="top" overlay={<Tooltip>Edit</Tooltip>}>
                                 <button className="btn btn-sm btn-outline-primary" aria-label="Edit project" onClick={() => navigate(`/admin/projects/${proj._id}/edit`)}><FaPencilAlt /></button>
                               </OverlayTrigger>
                               <OverlayTrigger placement="top" overlay={<Tooltip>Delete</Tooltip>}>
                                 <button className="btn btn-sm btn-outline-danger" aria-label="Delete project" onClick={() => handleDeleteClick(proj._id)}><FaTrashIcon /></button>
                               </OverlayTrigger>
-                            </>
-                          )}
+                        </>
+                      )}
                         </div>
                       </div>
                     </div>
@@ -196,7 +196,7 @@ export default function ProjectList() {
                   <button className="btn btn-outline-secondary btn-sm" disabled={currentPage === 1} onClick={() => setCurrentPage(p => Math.max(1, p - 1))}>Prev</button>
                   <span>Page {currentPage} of {totalPages}</span>
                   <button className="btn btn-outline-secondary btn-sm" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}>Next</button>
-                </div>
+          </div>
               )}
             </>
           )

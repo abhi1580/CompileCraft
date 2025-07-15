@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, NavLink, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import Home from './pages/common/Home';
 import About from './pages/common/About';
 import Services from './pages/common/Services';
@@ -65,6 +65,9 @@ function App() {
       });
   }, [dispatch]);
 
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
     <div className="app-flex-root">
       {/* Navbar (shared across all pages) */}
@@ -90,12 +93,14 @@ function App() {
           <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
         </Routes>
       </div>
-      {/* Footer (shared across all pages) */}
-      <footer className="footer_area text-white">
-        <div className="container text-center">
-          <p className="mb-0">&copy; {new Date().getFullYear()} CompileCraft. All rights reserved.</p>
-        </div>
-      </footer>
+      {/* Only show main footer on non-admin pages */}
+      {!isAdminRoute && (
+        <footer className="footer_area text-white">
+          <div className="container text-center">
+            <p className="mb-0">&copy; {new Date().getFullYear()} CompileCraft. All rights reserved.</p>
+          </div>
+        </footer>
+      )}
       <ToastContainer />
     </div>
   );

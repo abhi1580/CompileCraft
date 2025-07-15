@@ -100,52 +100,52 @@ export default function ProjectEdit() {
         <div className="card shadow-sm rounded-4 p-4 mb-4 bg-white">
           <form onSubmit={handleEditProject}>
             {/* Project Info */}
-            <div className="row g-3 mb-2">
-              <div className="col-md-4">
+          <div className="row g-3 mb-2">
+            <div className="col-md-4">
                 <label className="form-label fw-bold">Project Name <span className="text-danger">*</span></label>
                 <input type="text" className="form-control" name="name" placeholder="e.g. Website Redesign" value={form.name} onChange={handleInputChange} required />
-              </div>
-              <div className="col-md-4">
+            </div>
+            <div className="col-md-4">
                 <label className="form-label fw-bold">Description</label>
                 <textarea className="form-control" name="description" placeholder="Describe the project..." value={form.description} onChange={handleInputChange} rows={2} />
-              </div>
-              <div className="col-md-2">
-                <label className="form-label fw-bold">Status</label>
-                <select className="form-select" name="status" value={form.status} onChange={handleInputChange}>
-                  <option value="Planning">Planning</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </div>
-              <div className="col-md-2">
-                <label className="form-label fw-bold">Deadline <span className="text-danger">*</span></label>
-                <input type="date" className="form-control" name="deadline" value={form.deadline} onChange={handleInputChange} required />
-              </div>
             </div>
+            <div className="col-md-2">
+                <label className="form-label fw-bold">Status</label>
+              <select className="form-select" name="status" value={form.status} onChange={handleInputChange}>
+                <option value="Planning">Planning</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div className="col-md-2">
+                <label className="form-label fw-bold">Deadline <span className="text-danger">*</span></label>
+              <input type="date" className="form-control" name="deadline" value={form.deadline} onChange={handleInputChange} required />
+            </div>
+          </div>
             {/* Meta */}
-            <div className="row g-3 mb-2">
-              <div className="col-md-3">
+          <div className="row g-3 mb-2">
+            <div className="col-md-3">
                 <label className="form-label fw-bold">Budget</label>
                 <div className="input-group">
                   <span className="input-group-text">₹</span>
                   <input type="number" className="form-control" name="budget" placeholder="(optional)" value={form.budget} onChange={handleInputChange} min={0} />
-                </div>
+            </div>
                 <div className="form-text">Enter the budget in INR</div>
-              </div>
+            </div>
               {/* Team */}
               <div className="col-md-6">
                 <label className="form-label fw-bold">Team Members</label>
-                {usersLoading ? (
+              {usersLoading ? (
                   <div className="d-flex align-items-center"><Spinner size="sm" animation="border" className="me-2" /> Loading users...</div>
-                ) : usersError ? (
-                  <div className="text-danger">{usersError}</div>
-                ) : (
-                  <select className="form-select" name="team" multiple value={form.team} onChange={handleInputChange}>
-                    {users.filter(u => u.role !== 'admin').map(u => (
-                      <option key={u._id} value={u._id}>{u.email} ({u.role})</option>
-                    ))}
-                  </select>
-                )}
+              ) : usersError ? (
+                <div className="text-danger">{usersError}</div>
+              ) : (
+                <select className="form-select" name="team" multiple value={form.team} onChange={handleInputChange}>
+                  {users.filter(u => u.role !== 'admin').map(u => (
+                    <option key={u._id} value={u._id}>{u.email} ({u.role})</option>
+                  ))}
+                </select>
+              )}
                 <div className="form-text">Hold Ctrl (Windows) or Cmd (Mac) to select multiple team members.</div>
                 {/* Show selected team as chips */}
                 <div className="mt-2 d-flex flex-wrap gap-2">
@@ -163,27 +163,27 @@ export default function ProjectEdit() {
               <div className="col-12 d-flex align-items-center justify-content-between">
                 <h5 className="mb-0">Tasks</h5>
                 <button type="button" className="btn btn-outline-secondary" onClick={handleAddTask}>
-                  <FaPlus className="me-2" /> Add Task
-                </button>
-              </div>
+                <FaPlus className="me-2" /> Add Task
+              </button>
             </div>
-            {form.tasks.length > 0 && (
-              <div className="row g-2 mb-2 align-items-center">
-                <div className="col-12">
-                  <div className="table-responsive">
+          </div>
+          {form.tasks.length > 0 && (
+            <div className="row g-2 mb-2 align-items-center">
+              <div className="col-12">
+                <div className="table-responsive">
                     <table className="table table-bordered align-middle mb-0">
-                      <thead className="table-light">
-                        <tr>
-                          <th>Task</th>
+                    <thead className="table-light">
+                      <tr>
+                        <th>Task</th>
                           <th>Assignee</th>
                           <th>Priority</th>
-                          <th>Completed</th>
-                          <th>Remove</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {form.tasks.map((task, idx) => (
-                          <tr key={idx}>
+                        <th>Completed</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {form.tasks.map((task, idx) => (
+                        <tr key={idx}>
                             <td style={{ minWidth: 180 }}>
                               <input type="text" className="form-control" value={task.title} onChange={e => handleTaskChange(idx, 'title', e.target.value)} required placeholder="Task title" />
                             </td>
@@ -201,29 +201,29 @@ export default function ProjectEdit() {
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
                               </select>
-                            </td>
-                            <td className="text-center">
+                          </td>
+                          <td className="text-center">
                               <button type="button" className="btn btn-link p-0" onClick={() => handleTaskChange(idx, 'completed', !task.completed)} title={task.completed ? 'Mark incomplete' : 'Mark complete'}>
-                                {task.completed ? <FaCheckCircle color="green" /> : <FaRegCircle color="#aaa" />}
-                              </button>
-                            </td>
-                            <td className="text-center">
+                              {task.completed ? <FaCheckCircle color="green" /> : <FaRegCircle color="#aaa" />}
+                            </button>
+                          </td>
+                          <td className="text-center">
                               <button type="button" className="btn btn-link text-danger p-0" onClick={() => handleRemoveTask(idx)} title="Remove task"><FaTrash /></button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            )}
+            </div>
+          )}
             {/* Actions */}
             <div className="d-flex justify-content-end gap-2 mt-4">
               <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/admin/projects')}>Cancel</button>
-              <button type="submit" className="main-btn">Save Changes</button>
-            </div>
-          </form>
+            <button type="submit" className="main-btn">Save Changes</button>
+          </div>
+        </form>
         </div>
       </div>
     </section>

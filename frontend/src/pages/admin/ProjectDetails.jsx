@@ -82,7 +82,7 @@ export default function ProjectDetails() {
             {/* Tasks */}
             <div className="col-md-7">
               <div className="fw-bold mb-2">Tasks</div>
-              {project.tasks && project.tasks.length > 0 ? (
+        {project.tasks && project.tasks.length > 0 ? (
                 <div className="table-responsive">
                   <table className="table table-bordered align-middle mb-0">
                     <thead className="table-light">
