@@ -7,6 +7,7 @@ import ProgressBar from './ProgressBar';
 import { Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { FaEye, FaPencilAlt, FaTrash as FaTrashIcon } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import DeleteConfirmDialog from '../../components/admin/DeleteConfirmDialog';
 
 export default function ProjectList() {
   const [projects, setProjects] = useState([]);
@@ -19,6 +20,8 @@ export default function ProjectList() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 10;
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState(null);
 
   // Remove priorityOrder and priority sort logic
 
@@ -29,15 +32,28 @@ export default function ProjectList() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this project?')) return;
+  const handleDeleteClick = (id) => {
+    setProjectToDelete(id);
+    setShowDeleteDialog(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!projectToDelete) return;
     try {
-      await projectService.deleteProject(id);
-      setProjects(prev => prev.filter(p => p._id !== id));
+      await projectService.deleteProject(projectToDelete);
+      setProjects(prev => prev.filter(p => p._id !== projectToDelete));
       toast.success('Project deleted successfully!');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to delete project');
+    } finally {
+      setShowDeleteDialog(false);
+      setProjectToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteDialog(false);
+    setProjectToDelete(null);
   };
 
   const filteredProjects = projects
@@ -164,7 +180,7 @@ export default function ProjectList() {
                                 <button className="btn btn-sm btn-outline-primary" aria-label="Edit project" onClick={() => navigate(`/admin/projects/${proj._id}/edit`)}><FaPencilAlt /></button>
                               </OverlayTrigger>
                               <OverlayTrigger placement="top" overlay={<Tooltip>Delete</Tooltip>}>
-                                <button className="btn btn-sm btn-outline-danger" aria-label="Delete project" onClick={() => handleDelete(proj._id)}><FaTrashIcon /></button>
+                                <button className="btn btn-sm btn-outline-danger" aria-label="Delete project" onClick={() => handleDeleteClick(proj._id)}><FaTrashIcon /></button>
                               </OverlayTrigger>
                             </>
                           )}
@@ -186,6 +202,12 @@ export default function ProjectList() {
           )
         )}
       </div>
+      <DeleteConfirmDialog
+        open={showDeleteDialog}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        message="Are you sure you want to delete this project?"
+      />
       <style>{`
         .project-card {
           transition: box-shadow 0.2s, transform 0.2s;

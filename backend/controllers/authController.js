@@ -5,13 +5,13 @@ const { findUserByEmail, addUser } = require('../models/user');
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  const { email, password, name, phone, designation } = req.body;
+  if (!email || !password || !name) return res.status(400).json({ error: 'Email, password, and name are required' });
   try {
     const existing = await findUserByEmail(email);
     if (existing) return res.status(409).json({ error: 'User already exists' });
     const hashed = await bcrypt.hash(password, 10);
-    await addUser({ email, password: hashed });
+    await addUser({ email, password: hashed, name, phone, designation });
     res.json({ message: 'User registered' });
   } catch (err) {
     if (err.code === 11000) {
@@ -46,13 +46,13 @@ exports.protected = (req, res) => {
 };
 
 exports.createAdmin = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  const { email, password, name, phone, designation } = req.body;
+  if (!email || !password || !name) return res.status(400).json({ error: 'Email, password, and name are required' });
   try {
     const existing = await findUserByEmail(email);
     if (existing) return res.status(409).json({ error: 'User already exists' });
     const hashed = await bcrypt.hash(password, 10);
-    await addUser({ email, password: hashed, role: 'admin' });
+    await addUser({ email, password: hashed, name, phone, designation, role: 'admin' });
     const token = jwt.sign({ email, role: 'admin' }, JWT_SECRET, { expiresIn: '2h' });
     res.cookie('token', token, {
       httpOnly: true,

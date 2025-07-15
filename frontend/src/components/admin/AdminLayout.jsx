@@ -11,7 +11,7 @@ export default function AdminLayout({ children }) {
     <div className="admin-layout bg-light min-vh-100 d-flex flex-column">
       <AdminNavbar user={user} />
       <main className="flex-grow-1 py-4">
-        <div className="container-lg px-3 px-md-4">
+        <div className="container-fluid px-2 px-md-3">
           {children}
         </div>
       </main>

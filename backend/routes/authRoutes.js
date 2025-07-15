@@ -26,6 +26,7 @@ function authMiddleware(req, res, next) {
 const validateAuth = [
   body('email').isEmail().withMessage('Valid email required'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('name').notEmpty().withMessage('Name is required'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -68,7 +69,7 @@ router.get('/users', authMiddleware, async (req, res) => {
     return res.status(403).json({ error: 'Only admins can view users' });
   }
   const { User } = require('../models/user');
-  const users = await User.find({}, 'email role');
+  const users = await User.find({}, 'name email phone designation role');
   res.json({ users });
 });
 
