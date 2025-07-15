@@ -16,7 +16,11 @@ function Login() {
   useEffect(() => {
     if (user) {
       toast.success('Login successful!');
-      navigate('/admin/dashboard');
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/dashboard');
+      }
     }
   }, [user, navigate]);
 

@@ -124,6 +124,7 @@ export default function ProjectList() {
                 {paginatedProjects.map((proj) => {
                   const completedTasks = proj.tasks ? proj.tasks.filter(t => t.completed).length : 0;
                   const totalTasks = proj.tasks ? proj.tasks.length : 0;
+                  const pendingTasks = proj.tasks ? proj.tasks.filter(t => !t.completed).length : 0;
                   return (
                     <div key={proj._id} className="col-12 col-md-6 col-lg-4 col-xl-3">
                       <div className="project-card shadow-sm rounded-4 p-4 h-100 d-flex flex-column position-relative bg-white">
@@ -154,7 +155,10 @@ export default function ProjectList() {
                             >
                               <span className="badge bg-primary" style={{ cursor: 'pointer' }}>{completedTasks}/{totalTasks} tasks</span>
                             </OverlayTrigger>
-                      ) : <span className="text-muted">No tasks</span>}
+                         ) : <span className="text-muted">No tasks</span>}
+                         {totalTasks > 0 && (
+                           <span className="badge bg-warning text-dark ms-2">{pendingTasks} pending</span>
+                         )}
                         </div>
                         {/* Deadline, budget, and task priority summary */}
                         <div className="mb-3 d-flex flex-wrap gap-2">

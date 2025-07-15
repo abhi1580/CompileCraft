@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String },
   designation: { type: String },
+  techStack: [{ type: String }],
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

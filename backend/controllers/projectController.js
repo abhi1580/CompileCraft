@@ -9,7 +9,7 @@ function calculateProgress(tasks) {
 
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().populate('team', 'email role').populate('createdBy', 'email role');
+    const projects = await Project.find().populate('team', 'email role designation').populate('createdBy', 'email role');
     res.json({ projects });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch projects', details: err.message });
@@ -44,7 +44,7 @@ exports.addProject = async (req, res) => {
   try {
     const project = new Project(projectData);
     await project.save();
-    await project.populate('team', 'email role');
+    await project.populate('team', 'email role designation');
     await project.populate('createdBy', 'email role');
     res.json({ message: 'Project added', project });
   } catch (err) {
@@ -78,7 +78,7 @@ exports.updateProject = async (req, res) => {
   }
   try {
     const project = await Project.findByIdAndUpdate(id, update, { new: true })
-      .populate('team', 'email role')
+      .populate('team', 'email role designation')
       .populate('createdBy', 'email role');
     if (!project) return res.status(404).json({ error: 'Project not found' });
     res.json({ message: 'Project updated', project });

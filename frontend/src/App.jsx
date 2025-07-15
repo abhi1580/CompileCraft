@@ -6,6 +6,9 @@ import Services from './pages/common/Services';
 import Contact from './pages/common/Contact';
 import Login from './pages/common/Login';
 import Dashboard from './pages/admin/Dashboard';
+import UserDashboard from './pages/user/Dashboard';
+import MyProjects from './pages/user/MyProjects';
+import MyTasks from './pages/user/MyTasks';
 import Revenue from './pages/admin/Revenue';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutThunk } from './redux/slices/authSlice';
@@ -24,6 +27,7 @@ import AdminLayout from './components/admin/AdminLayout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Careers from './pages/common/Careers';
+import UserLayout from './components/user/UserLayout';
 
 function App() {
   // Collapse navbar on link click (for mobile)
@@ -83,6 +87,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/user/dashboard" element={<UserLayout><UserDashboard /></UserLayout>} />
+          <Route path="/user/projects" element={<UserLayout><MyProjects /></UserLayout>} />
+          <Route path="/user/tasks" element={<UserLayout><MyTasks /></UserLayout>} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
           <Route path="/admin/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />

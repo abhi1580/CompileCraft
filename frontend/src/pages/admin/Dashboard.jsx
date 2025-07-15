@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaProjectDiagram, FaMoneyBillWave, FaUsers, FaTasks, FaChartBar } from 'react-icons/fa';
+import { FaProjectDiagram, FaMoneyBillWave, FaUsers, FaTasks, FaChartBar, FaCheckCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { getProjects } from '../../services/projectService';
 import { getUsers } from '../../services/userService';
@@ -38,6 +38,60 @@ function Dashboard() {
     return sum;
   }, 0);
 
+  // Calculate total manpower (users with role 'user')
+  const manpowerCount = users.filter(u => u.role === 'user').length;
+
+  // Calculate free manpower (users with role 'user' not assigned to any project and not assigned any tasks)
+  const userIdSet = new Set(users.filter(u => u.role === 'user').map(u => u._id?.toString?.() || u._id || u.email));
+  const assignedToProject = new Set();
+  const assignedToTask = new Set();
+  projects.forEach(proj => {
+    if (Array.isArray(proj.team)) {
+      proj.team.forEach(member => {
+        // member can be an object or id string
+        if (typeof member === 'object' && member._id) {
+          assignedToProject.add(member._id.toString());
+        } else if (typeof member === 'string') {
+          assignedToProject.add(member);
+        }
+      });
+    }
+    if (Array.isArray(proj.tasks)) {
+      proj.tasks.forEach(task => {
+        if (task.assignee) {
+          if (typeof task.assignee === 'object' && task.assignee._id) {
+            assignedToTask.add(task.assignee._id.toString());
+          } else if (typeof task.assignee === 'string') {
+            assignedToTask.add(task.assignee);
+          }
+        }
+      });
+    }
+  });
+  const freeManpowerCount = users.filter(u => u.role === 'user' && !assignedToProject.has(u._id?.toString?.() || u._id || u.email) && !assignedToTask.has(u._id?.toString?.() || u._id || u.email)).length;
+
+  // Total Projects
+  const totalProjects = projects.length;
+
+  // Projects In Progress
+  const projectsInProgress = projects.filter(p => p.status === 'In Progress').length;
+
+  // Projects Completed
+  const projectsCompleted = projects.filter(p => p.status === 'Completed').length;
+
+  // Projects Due Soon (next 7 days)
+  const now = new Date();
+  const in7Days = new Date(now);
+  in7Days.setDate(now.getDate() + 7);
+  const projectsDueSoon = projects.filter(p => {
+    if (!p.deadline) return false;
+    const deadline = new Date(p.deadline);
+    return deadline >= now && deadline <= in7Days;
+  }).length;
+
+  // Revenue (placeholder)
+  const revenue = '--';
+
   return (
     <section className="dashboard_area py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
       <div className="container-fluid">
@@ -53,32 +107,53 @@ function Dashboard() {
           <>
             {/* Quick Stats */}
             <div className="row g-4 mb-5 text-center">
-              <div className="col-6 col-md-3">
+              <div className="col-6 col-md-2">
                 <div className="bg-white rounded-4 shadow-sm p-4">
                   <FaProjectDiagram size={32} color="#F94F4F" className="mb-2" />
-                  <h4 className="fw-bold mb-0">{projects.length}</h4>
-                  <div className="text-muted">Projects</div>
+                  <h4 className="fw-bold mb-0">{totalProjects}</h4>
+                  <div className="text-muted">Total Projects</div>
                 </div>
               </div>
-              <div className="col-6 col-md-3">
-                <div className="bg-white rounded-4 shadow-sm p-4">
-                  <FaMoneyBillWave size={32} color="#F94F4F" className="mb-2" />
-                  <h4 className="fw-bold mb-0">--</h4>
-                  <div className="text-muted">Revenue (This Month)</div>
-                </div>
-              </div>
-              <div className="col-6 col-md-3">
-                <div className="bg-white rounded-4 shadow-sm p-4">
-                  <FaTasks size={32} color="#F94F4F" className="mb-2" />
-                  <h4 className="fw-bold mb-0">{openTasks}</h4>
-                  <div className="text-muted">Open Tasks</div>
-                </div>
-              </div>
-              <div className="col-6 col-md-3">
+              <div className="col-6 col-md-2">
                 <div className="bg-white rounded-4 shadow-sm p-4">
                   <FaUsers size={32} color="#F94F4F" className="mb-2" />
-                  <h4 className="fw-bold mb-0">{users.length}</h4>
-                  <div className="text-muted">Team Members</div>
+                  <h4 className="fw-bold mb-0">{manpowerCount}</h4>
+                  <div className="text-muted">Total Manpower</div>
+                </div>
+              </div>
+              <div className="col-6 col-md-2">
+                <div className="bg-white rounded-4 shadow-sm p-4">
+                  <FaUsers size={32} color="#6c757d" className="mb-2" />
+                  <h4 className="fw-bold mb-0">{freeManpowerCount}</h4>
+                  <div className="text-muted">Free Manpower</div>
+                </div>
+              </div>
+              <div className="col-6 col-md-2">
+                <div className="bg-white rounded-4 shadow-sm p-4">
+                  <FaTasks size={32} color="#F94F4F" className="mb-2" />
+                  <h4 className="fw-bold mb-0">{projectsInProgress}</h4>
+                  <div className="text-muted">Projects In Progress</div>
+                </div>
+              </div>
+              <div className="col-6 col-md-2">
+                <div className="bg-white rounded-4 shadow-sm p-4">
+                  <FaCheckCircle size={32} color="#28a745" className="mb-2" />
+                  <h4 className="fw-bold mb-0">{projectsCompleted}</h4>
+                  <div className="text-muted">Projects Completed</div>
+                </div>
+              </div>
+              <div className="col-6 col-md-2">
+                <div className="bg-white rounded-4 shadow-sm p-4">
+                  <FaChartBar size={32} color="#ffc107" className="mb-2" />
+                  <h4 className="fw-bold mb-0">{projectsDueSoon}</h4>
+                  <div className="text-muted">Projects Due Soon</div>
+                </div>
+              </div>
+              <div className="col-6 col-md-2">
+                <div className="bg-white rounded-4 shadow-sm p-4">
+                  <FaMoneyBillWave size={32} color="#F94F4F" className="mb-2" />
+                  <h4 className="fw-bold mb-0">{revenue}</h4>
+                  <div className="text-muted">Revenue</div>
                 </div>
               </div>
             </div>

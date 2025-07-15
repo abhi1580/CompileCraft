@@ -35,14 +35,20 @@ exports.login = async (req, res) => {
       sameSite: 'strict',
       maxAge: 2 * 60 * 60 * 1000 // 2 hours
     });
-    res.json({ message: 'Login successful', user: { email, role: user.role } });
+    res.json({ message: 'Login successful', user });
   } catch (err) {
     res.status(500).json({ error: 'Server error', details: err.message });
   }
 };
 
 exports.protected = (req, res) => {
-  res.json({ message: 'This is protected data', user: req.user });
+  // Fetch full user object by email
+  const { User } = require('../models/user');
+  User.findOne({ email: req.user.email }).then(user => {
+    res.json({ message: 'This is protected data', user });
+  }).catch(() => {
+    res.status(500).json({ error: 'Failed to fetch user' });
+  });
 };
 
 exports.createAdmin = async (req, res) => {

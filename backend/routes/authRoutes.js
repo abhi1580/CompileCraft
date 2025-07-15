@@ -82,8 +82,14 @@ router.get('/users', authMiddleware, async (req, res) => {
     return res.status(403).json({ error: 'Only admins can view users' });
   }
   const { User } = require('../models/user');
-  const users = await User.find({}, 'name email phone designation role');
+  const users = await User.find({}, 'name email phone designation role techStack');
   res.json({ users });
 });
+
+// Update user (admin only)
+router.patch('/users/:id', authMiddleware, require('../controllers/userController').updateUser);
+
+// Delete user (admin only)
+router.delete('/users/:id', authMiddleware, require('../controllers/userController').deleteUser);
 
 module.exports = router; 
