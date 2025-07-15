@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import * as projectService from '../../services/projectService';
 import * as userService from '../../services/userService';
 import { FaPlus, FaTrash, FaCheckCircle, FaRegCircle } from 'react-icons/fa';
+import { Spinner } from 'react-bootstrap';
 
 export default function ProjectEdit() {
   const { id } = useParams();
@@ -83,17 +84,22 @@ export default function ProjectEdit() {
 
   return (
     <section className="projects_area py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
-      <div className="container">
+      <div className="container-fluid">
         <h2 style={{ fontWeight: 800 }}>Edit Project</h2>
         <form className="mb-4 p-4 bg-white rounded-4 shadow-sm" onSubmit={handleEditProject}>
+          {/* Basic Info */}
+          <h5 className="mb-3">Project Information</h5>
           <div className="row g-3 mb-2">
             <div className="col-md-4">
-              <input type="text" className="form-control" name="name" placeholder="Project Name" value={form.name} onChange={handleInputChange} required />
+              <label className="form-label fw-bold">Project Name <span className="text-danger">*</span></label>
+              <input type="text" className="form-control" name="name" placeholder="e.g. Website Redesign" value={form.name} onChange={handleInputChange} required />
             </div>
             <div className="col-md-4">
-              <input type="text" className="form-control" name="description" placeholder="Description" value={form.description} onChange={handleInputChange} />
+              <label className="form-label fw-bold">Description</label>
+              <textarea className="form-control" name="description" placeholder="Describe the project..." value={form.description} onChange={handleInputChange} rows={2} />
             </div>
             <div className="col-md-2">
+              <label className="form-label fw-bold">Status</label>
               <select className="form-select" name="status" value={form.status} onChange={handleInputChange}>
                 <option value="Planning">Planning</option>
                 <option value="In Progress">In Progress</option>
@@ -101,11 +107,14 @@ export default function ProjectEdit() {
               </select>
             </div>
             <div className="col-md-2">
+              <label className="form-label fw-bold">Deadline <span className="text-danger">*</span></label>
               <input type="date" className="form-control" name="deadline" value={form.deadline} onChange={handleInputChange} required />
             </div>
           </div>
+          {/* Budget & Priority */}
           <div className="row g-3 mb-2">
             <div className="col-md-3">
+              <label className="form-label fw-bold">Priority</label>
               <select className="form-select" name="priority" value={form.priority} onChange={handleInputChange}>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -113,11 +122,18 @@ export default function ProjectEdit() {
               </select>
             </div>
             <div className="col-md-3">
-              <input type="number" className="form-control" name="budget" placeholder="Budget (optional)" value={form.budget} onChange={handleInputChange} min={0} />
+              <label className="form-label fw-bold">Budget</label>
+              <div className="input-group">
+                <span className="input-group-text">₹</span>
+                <input type="number" className="form-control" name="budget" placeholder="(optional)" value={form.budget} onChange={handleInputChange} min={0} />
+              </div>
+              <div className="form-text">Enter the budget in INR</div>
             </div>
-            <div className="col-md-3">
+            {/* Team Selection */}
+            <div className="col-md-6">
+              <label className="form-label fw-bold">Team Members</label>
               {usersLoading ? (
-                <div>Loading users...</div>
+                <div className="d-flex align-items-center"><Spinner size="sm" animation="border" className="me-2" /> Loading users...</div>
               ) : usersError ? (
                 <div className="text-danger">{usersError}</div>
               ) : (
@@ -127,9 +143,20 @@ export default function ProjectEdit() {
                   ))}
                 </select>
               )}
+              <div className="form-text">Hold Ctrl (Windows) or Cmd (Mac) to select multiple team members.</div>
+              {/* Show selected team as chips */}
+              <div className="mt-2">
+                {form.team.length > 0 && users.filter(u => form.team.includes(u._id)).map(u => (
+                  <span key={u._id} className="badge bg-secondary me-2 mb-1">{u.email}</span>
+                ))}
+              </div>
             </div>
-            <div className="col-md-3">
-              <button type="button" className="btn btn-outline-secondary w-100" onClick={handleAddTask}>
+          </div>
+          {/* Tasks Section */}
+          <div className="row mb-2 mt-4">
+            <div className="col-12 d-flex align-items-center justify-content-between">
+              <h5 className="mb-0">Tasks</h5>
+              <button type="button" className="btn btn-outline-secondary" onClick={handleAddTask}>
                 <FaPlus className="me-2" /> Add Task
               </button>
             </div>
@@ -138,10 +165,11 @@ export default function ProjectEdit() {
             <div className="row g-2 mb-2 align-items-center">
               <div className="col-12">
                 <div className="table-responsive">
-                  <table className="table table-bordered mb-0">
+                  <table className="table table-bordered mb-0 align-middle">
                     <thead className="table-light">
                       <tr>
                         <th>Task</th>
+                        <th>Assignee</th>
                         <th>Completed</th>
                         <th>Remove</th>
                       </tr>
@@ -149,16 +177,24 @@ export default function ProjectEdit() {
                     <tbody>
                       {form.tasks.map((task, idx) => (
                         <tr key={idx}>
-                          <td>
-                            <input type="text" className="form-control" value={task.title} onChange={e => handleTaskChange(idx, 'title', e.target.value)} required />
+                          <td style={{ minWidth: 180 }}>
+                            <input type="text" className="form-control" value={task.title} onChange={e => handleTaskChange(idx, 'title', e.target.value)} required placeholder="Task title" />
+                          </td>
+                          <td style={{ minWidth: 160 }}>
+                            <select className="form-select" value={task.assignee || ''} onChange={e => handleTaskChange(idx, 'assignee', e.target.value)}>
+                              <option value="">Unassigned</option>
+                              {users.filter(u => form.team.includes(u._id)).map(u => (
+                                <option key={u._id} value={u._id}>{u.email}</option>
+                              ))}
+                            </select>
                           </td>
                           <td className="text-center">
-                            <button type="button" className="btn btn-link p-0" onClick={() => handleTaskChange(idx, 'completed', !task.completed)}>
+                            <button type="button" className="btn btn-link p-0" onClick={() => handleTaskChange(idx, 'completed', !task.completed)} title={task.completed ? 'Mark incomplete' : 'Mark complete'}>
                               {task.completed ? <FaCheckCircle color="green" /> : <FaRegCircle color="#aaa" />}
                             </button>
                           </td>
                           <td className="text-center">
-                            <button type="button" className="btn btn-link text-danger p-0" onClick={() => handleRemoveTask(idx)}><FaTrash /></button>
+                            <button type="button" className="btn btn-link text-danger p-0" onClick={() => handleRemoveTask(idx)} title="Remove task"><FaTrash /></button>
                           </td>
                         </tr>
                       ))}
@@ -168,9 +204,12 @@ export default function ProjectEdit() {
               </div>
             </div>
           )}
+          {/* Error/Success */}
           {formError && <div className="alert alert-danger mt-3 mb-0 py-2">{formError}</div>}
           {formSuccess && <div className="alert alert-success mt-3 mb-0 py-2">{formSuccess}</div>}
-          <div className="text-end mt-3">
+          {/* Actions */}
+          <div className="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" className="btn btn-outline-secondary" onClick={() => navigate('/projects')}>Cancel</button>
             <button type="submit" className="main-btn">Save Changes</button>
           </div>
         </form>

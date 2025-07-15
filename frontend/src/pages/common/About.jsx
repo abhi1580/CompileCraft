@@ -4,7 +4,7 @@ import { FaUserTie, FaUserAlt, FaUserSecret, FaRegCalendarCheck, FaRegLightbulb 
 function About() {
   return (
     <section id="about" className="about_area py-5" style={{ background: '#f8f9fb' }}>
-      <div className="container">
+      <div className="container-fluid">
         {/* Company Story & Mission */}
         <div className="row justify-content-center mb-5">
           <div className="col-lg-8">

@@ -4,7 +4,7 @@ import { FaPencilAlt, FaCloud, FaMobileAlt, FaBolt, FaSmile, FaChartBar } from '
 function Services() {
   return (
     <section id="services" className="services_area pt-5 pb-5" style={{ background: '#f8f9fb' }}>
-      <div className="container">
+      <div className="container-fluid">
         {/* Services Offered */}
         <div className="row justify-content-center mb-5">
           <div className="col-lg-8">

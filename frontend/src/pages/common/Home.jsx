@@ -6,7 +6,7 @@ function Home() {
     <>
       {/* Hero Section */}
       <section className="header_area d-flex align-items-center" style={{ minHeight: '60vh', background: 'linear-gradient(90deg, #f5f5fc 60%, #fff 100%)' }}>
-        <div className="container py-5">
+        <div className="container-fluid py-5">
           <div className="row align-items-center">
             <div className="col-lg-7 mb-4 mb-lg-0">
               <div className="header_hero_content">
@@ -28,7 +28,7 @@ function Home() {
 
       {/* Features Section */}
       <section className="py-5 bg-light">
-        <div className="container">
+        <div className="container-fluid">
           <div className="section_title text-center pb-4">
             <h5 className="sub_title">Why Choose Us?</h5>
             <h2 className="main_title">Our Key Advantages</h2>
@@ -61,7 +61,7 @@ function Home() {
 
       {/* Our Approach Section */}
       <section className="py-5">
-        <div className="container">
+        <div className="container-fluid">
           <div className="section_title text-center pb-4">
             <h5 className="sub_title">Our Approach</h5>
             <h2 className="main_title">How We Make You Succeed</h2>
@@ -94,7 +94,7 @@ function Home() {
 
       {/* How We Work / Process Section */}
       <section className="py-5 bg-light">
-        <div className="container">
+        <div className="container-fluid">
           <div className="section_title text-center pb-4">
             <h5 className="sub_title">How We Work</h5>
             <h2 className="main_title">Our Process</h2>
@@ -134,7 +134,7 @@ function Home() {
 
       {/* Testimonials Section */}
       <section className="py-5">
-        <div className="container">
+        <div className="container-fluid">
           <div className="section_title text-center pb-4">
             <h5 className="sub_title">Testimonials</h5>
             <h2 className="main_title">What Our Clients Say</h2>

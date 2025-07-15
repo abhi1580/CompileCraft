@@ -63,7 +63,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <>
+    <div className="app-flex-root">
       {/* Navbar (shared across all pages) */}
       {user && user.role === 'admin' ? <AdminNavbar user={user} /> : <PublicNavbar user={user} onLogout={handleLogout} handleNavLinkClick={handleNavLinkClick} />}
       {/* Page Content */}
@@ -90,7 +90,7 @@ function App() {
           <p className="mb-0">&copy; {new Date().getFullYear()} CompileCraft. All rights reserved.</p>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 

@@ -4,7 +4,7 @@ import { FaEnvelopeOpenText, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaLinkedin,
 function Contact() {
   return (
     <section id="contact" className="contact_area py-5" style={{ background: '#f8f9fb' }}>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row justify-content-center mb-5">
           <div className="col-lg-8">
             <div className="text-center mb-4">

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function Dashboard() {
   return (
     <section className="dashboard_area py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
-      <div className="container">
+      <div className="container-fluid">
         <div className="mb-5 text-center">
           <h2 style={{ fontWeight: 800 }}>Welcome to CompileCraft Dashboard</h2>
           <p className="lead" style={{ color: '#747E88' }}>Manage your projects, revenue, and team in one place.</p>
