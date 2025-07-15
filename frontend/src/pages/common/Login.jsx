@@ -1,11 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../redux/slices/authSlice';
+import { useEffect, useState } from 'react';
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user, loading, error } = useSelector((state) => state.auth);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    dispatch(login({ email, password }));
   };
   return (
     <section className="login_area d-flex align-items-center justify-content-center" style={{ minHeight: '80vh', background: '#f8f9fb' }}>
@@ -20,14 +34,15 @@ function Login() {
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="loginEmail" className="form-label">Email address</label>
-                  <input type="email" className="form-control" id="loginEmail" placeholder="Enter your email" required />
+                  <input type="email" className="form-control" id="loginEmail" placeholder="Enter your email" required value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="loginPassword" className="form-label">Password</label>
-                  <input type="password" className="form-control" id="loginPassword" placeholder="Enter your password" required />
+                  <input type="password" className="form-control" id="loginPassword" placeholder="Enter your password" required value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
+                {error && <div className="alert alert-danger py-2">{error}</div>}
                 <div className="d-grid mb-3">
-                  <button type="submit" className="main-btn">Login</button>
+                  <button type="submit" className="main-btn" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
                 </div>
               </form>
               <div className="text-center mt-3" style={{ color: '#adb5bd', fontSize: '0.95rem' }}>
