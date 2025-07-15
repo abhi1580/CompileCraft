@@ -28,3 +28,7 @@ Thumbs.db
 
 # file uploads
 uploads/ 
+
+
+#environment variables
+.env
