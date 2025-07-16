@@ -28,6 +28,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Careers from './pages/common/Careers';
 import UserLayout from './components/user/UserLayout';
+import AdminJobs from './pages/admin/AdminJobs';
+import JobDetails from './pages/common/JobDetails';
+import AdminJobApplications from './pages/admin/AdminJobApplications';
+import AdminJobApplicationDetails from './pages/admin/AdminJobApplicationDetails';
 
 function App() {
   // Collapse navbar on link click (for mobile)
@@ -87,6 +91,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/careers/:id" element={<JobDetails />} />
           <Route path="/user/dashboard" element={<UserLayout><UserDashboard /></UserLayout>} />
           <Route path="/user/projects" element={<UserLayout><MyProjects /></UserLayout>} />
           <Route path="/user/tasks" element={<UserLayout><MyTasks /></UserLayout>} />
@@ -98,8 +103,11 @@ function App() {
           <Route path="/admin/projects/:id/edit" element={<AdminLayout><ProjectEdit /></AdminLayout>} />
           <Route path="/admin/projects/:id" element={<AdminLayout><ProjectDetails /></AdminLayout>} />
           <Route path="/admin/revenue" element={<AdminLayout><Revenue /></AdminLayout>} />
+          <Route path="/admin/jobs" element={<AdminLayout><AdminJobs /></AdminLayout>} />
           <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
           <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
+          <Route path="/admin/job-applications" element={<AdminLayout><AdminJobApplications /></AdminLayout>} />
+          <Route path="/admin/job-applications/:id" element={<AdminLayout><AdminJobApplicationDetails /></AdminLayout>} />
         </Routes>
       </div>
       {/* Only show main footer on non-admin pages */}

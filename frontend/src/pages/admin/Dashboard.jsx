@@ -3,24 +3,29 @@ import { FaProjectDiagram, FaMoneyBillWave, FaUsers, FaTasks, FaChartBar, FaChec
 import { Link } from 'react-router-dom';
 import { getProjects } from '../../services/projectService';
 import { getUsers } from '../../services/userService';
+import { getJobApplications } from '../../services/jobService';
+import { FaEnvelopeOpenText } from 'react-icons/fa';
 
 function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [jobApplications, setJobApplications] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       setError(null);
       try {
-        const [projectsData, usersData] = await Promise.all([
+        const [projectsData, usersData, jobAppsData] = await Promise.all([
           getProjects(),
           getUsers(),
+          getJobApplications(),
         ]);
         setProjects(projectsData || []);
         setUsers(usersData || []);
+        setJobApplications(jobAppsData || []);
       } catch (err) {
         setError('Failed to load dashboard data');
       } finally {
@@ -200,6 +205,15 @@ function Dashboard() {
                 <div className="fw-bold">Reports</div>
               </div>
             </a>
+          </div>
+          <div className="col-6 col-md-2">
+            <Link to="/admin/job-applications" className="text-decoration-none">
+              <div className="bg-white rounded-4 shadow-sm p-4 text-center h-100 dashboard-nav-card">
+                <FaEnvelopeOpenText size={28} color="#38424D" className="mb-2" />
+                <div className="fw-bold">Job Applications</div>
+                <div className="text-muted">{jobApplications.length}</div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

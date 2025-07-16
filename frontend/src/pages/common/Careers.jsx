@@ -1,28 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaBriefcase, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
-
-const jobs = [
-  {
-    title: 'Frontend Developer',
-    location: 'Remote',
-    type: 'Full Time',
-    description: 'Work with React, modern UI/UX, and help build beautiful web apps.'
-  },
-  {
-    title: 'Backend Developer',
-    location: 'Bangalore, India',
-    type: 'Full Time',
-    description: 'Node.js, Express, MongoDB, REST APIs, and scalable backend systems.'
-  },
-  {
-    title: 'UI/UX Designer',
-    location: 'Remote',
-    type: 'Contract',
-    description: 'Design intuitive interfaces and collaborate with product teams.'
-  }
-];
+import { getJobs } from '../../services/jobService';
+import { Link } from 'react-router-dom';
 
 export default function Careers() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getJobs()
+      .then(setJobs)
+      .catch(() => setError('Failed to load job openings'))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <section className="public-section py-5" style={{ background: '#f8f9fb', minHeight: '80vh' }}>
       {/* Hero Section */}
@@ -40,18 +32,37 @@ export default function Careers() {
       </div>
       <div className="container">
         <div className="row justify-content-center">
-          {jobs.map((job, idx) => (
-            <div className="col-md-6 col-lg-4 mb-4" key={idx}>
-              <div className="bg-white rounded-4 shadow-sm p-4 h-100 d-flex flex-column">
-                <h4 className="mb-2" style={{ fontWeight: 700 }}><FaBriefcase className="me-2 text-primary" />{job.title}</h4>
-                <div className="mb-2 text-muted" style={{ fontSize: '0.98rem' }}>
-                  <FaMapMarkerAlt className="me-1" /> {job.location} &nbsp;|&nbsp; <FaClock className="me-1" /> {job.type}
+          {loading ? (
+            <div className="text-center">Loading job openings...</div>
+          ) : error ? (
+            <div className="text-danger text-center">{error}</div>
+          ) : jobs.length === 0 ? (
+            <div className="text-muted text-center">No job openings at the moment.</div>
+          ) : (
+            jobs.map((job, idx) => (
+              <div className="col-md-6 col-lg-4 mb-4" key={job._id || idx}>
+                <div className="bg-white rounded-4 shadow-sm p-4 h-100 d-flex flex-column" style={{ minHeight: 370, display: 'flex' }}>
+                  <h4 className="mb-2" style={{ fontWeight: 700 }}><FaBriefcase className="me-2 text-primary" />{job.title}</h4>
+                  <div className="mb-2 text-muted" style={{ fontSize: '0.98rem' }}>
+                    <FaMapMarkerAlt className="me-1" /> {job.location} &nbsp;|&nbsp; <FaClock className="me-1" /> {job.type}
+                  </div>
+                  <p className="flex-grow-1 mb-3">{job.description}</p>
+                  {Array.isArray(job.fields) && job.fields.length > 0 && (
+                    <div className="mb-3">
+                      {job.fields.map((field, fidx) => (
+                        <div key={fidx}>
+                          <span style={{ fontWeight: 'bold' }}>{field.name}</span>: {field.value}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-auto">
+                    <Link to={`/careers/${job._id}`} className="btn btn-outline-primary w-100">View Details</Link>
+                  </div>
                 </div>
-                <p className="flex-grow-1 mb-3">{job.description}</p>
-                <button className="btn btn-outline-primary w-100" disabled>Apply Now</button>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </section>

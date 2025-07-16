@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,6 +39,13 @@ app.use('/api', authRoutes);
 // Project routes
 const projectRoutes = require('./routes/projectRoutes');
 app.use('/api/projects', projectRoutes);
+
+// Job routes
+const jobRoutes = require('./routes/jobRoutes');
+app.use('/api', jobRoutes);
+
+// Serve uploads directory as static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
